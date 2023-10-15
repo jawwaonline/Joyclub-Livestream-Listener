@@ -1,0 +1,33 @@
+{
+  "name": "Mutation-Observer",
+  "description": "Observing a Chat",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "/images/images.png",
+    "32": "/images/images.png",
+    "48": "/images/images.png",
+    "128": "/images/images.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "/images/images.png",
+      "32": "/images/images.png",
+      "48": "/images/images.png",
+      "128": "/images/images.png"
+    }
+  },
+  "options_page": "options.html",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.joyclub.de/livestream/channel/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}

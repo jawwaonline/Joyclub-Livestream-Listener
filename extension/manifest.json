@@ -1,0 +1,27 @@
+{
+  "name": "Joyclub Livestream Chat",
+  "description": "Observing the Joyclub Livestream Chat",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "icons": {
+    "48": "/images/online.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "/images/idle.png"
+    }
+  },
+  "options_page": "options.html",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.joyclub.de/livestream/channel/*"],
+      "js": ["content.js", "socket.io.min.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
