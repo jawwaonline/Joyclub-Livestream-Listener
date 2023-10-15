@@ -7,3 +7,7 @@
 - showing messages
 - show available "rooms" / "livestreamers"
 - selevting a "livestreamer"
+
+# Installation
+
+- open up in liveserver

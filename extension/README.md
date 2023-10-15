@@ -42,3 +42,10 @@
 
 - recieve messages from content.js to change icon ✅
 - creating other icons
+
+# Installation
+
+- open browser
+- click on extension
+- load custom extension
+- load directory extension
