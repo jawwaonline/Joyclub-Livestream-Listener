@@ -6,7 +6,7 @@
 - creating js script to connect to SocketServer ✅
 - showing messages ✅
 - show available "rooms" -> not appending the list - emptying the node beforehand ✅
-- show also all available and StreamerName
+- show also all available and StreamerName ✅
 - selecting a "livestreamer" and only showing it´s livestream messages
 
 # Installation
