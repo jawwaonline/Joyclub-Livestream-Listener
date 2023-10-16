@@ -7,19 +7,20 @@
 
 - splitting streamername and message ✅
 - add socket.io ✅
+- solving Anonymus or StreamerName ✅
 - solving icon issue on li Element
-- avoiding anonymous streamer -> using stream id
+- transmitting StreamerName and Channel-ID ✅
+- limit to livesteam webpage ✅
 - avoiding "still here ? "
-- limit to livesteam webpage
 - add time to disconnect from socketserver
 - error handling
 - send message to popup.js to show current connection state
 
 ## popup.html
 
-- shows the current states
-- activates listener
+- Loads current messages
 - shows current streamername
+- shows current state
 
 ### TODO
 

@@ -2,6 +2,10 @@ console.log('running in content.js');
 
 //----------------------------------------------------------------------------------------
 function chatListener(streamerName) {
+  const currentUrl = window.location.href;
+  const url = new URL(currentUrl);
+  const channelID = url.searchParams.get('channel');
+
   // START SOCKET CONNECTION
   //--------------------------------
   const socket = io('http://localhost:3000');
@@ -13,6 +17,7 @@ function chatListener(streamerName) {
     console.log('Conneted to Websocket Server');
   });
 
+  socket.emit('join room', channelID, streamerName);
   // END SOCKET CONNECTION
   //--------------------------------
 
@@ -45,36 +50,52 @@ function chatListener(streamerName) {
         for (const node of mutation.addedNodes) {
           //console.log(node);
           if (node.nodeName.toLowerCase() === 'li') {
-            // SPLITTING MESSAGE AND USERNAME FROM MESSAGE
-            // EMITTING MESSAGE, USERNAME, STREAMERNAME
+            // SPLITTING MESSAGE AND CHATUSERNAME FROM CHATMESSAGE
+            // EMITTING CHATMESSAGE, CHATUSERNAME, STREAMERNAME
             const liElement = node;
             // IGNORING MESSAGES WITHOUT TEXT
             if (
               liElement.querySelector(
                 '.text_chat_user_message_content'
-              ) != null &&
-              liElement.querySelector(
-                '.text_chat_user_message_content'
               ).textContent != null
             ) {
-              const message = liElement.querySelector(
+              const chatMessage = liElement.querySelector(
                 '.text_chat_user_message_content'
               ).textContent;
               // TODO HANDEL NULL VALUE
-              const username = liElement.querySelector(
+              const chatUsername = liElement.querySelector(
                 '.text_chat_sender_name'
               ).textContent;
 
+              // DEBUGGER
+              console.log(
+                streamerName +
+                  '--' +
+                  chatUsername +
+                  '---' +
+                  chatMessage
+              );
               // EMITTING MESSAGE TO WEBSOCKETSERVER
-              socket.emit('message', {
-                message,
-                username,
-                streamerName: streamerName
+              // socket.emit('message', {
+              //  chatMessage, chatUsername, streamerName, channelID;
+              // });
+
+              // EMITTING MESSAGE TO ROOM IN WEBSOCKETSERVER
+
+              socket.emit('messagesToRoom', channelID, {
+                chatMessage,
+                chatUsername,
+                streamerName,
+                channelID
               });
 
               // EMITTING MESSAGE TO POPUPHTML
               chrome.runtime.sendMessage({
-                newMessage: { username: username, message: message }
+                newMessage: {
+                  chatMessage,
+                  chatUsername,
+                  streamerName
+                }
               });
             }
           }
@@ -98,9 +119,11 @@ function chatListener(streamerName) {
 
 // DELAY TO HANDLE THE DOM INJECTION AND STARTING THE OBSERVER
 setTimeout(() => {
-  const streamerName = document.querySelector(
+  const Element = document.querySelector(
     '.video_stream_profile .name'
-  ).textContent;
+  );
+
+  const streamerName = Element ? Element.textContent : 'Anonymous';
 
   chatListener(streamerName);
 
