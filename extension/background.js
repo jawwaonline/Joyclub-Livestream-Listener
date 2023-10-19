@@ -7,10 +7,10 @@ chrome.runtime.onMessage.addListener(
       chrome.action.setIcon({
         path: iconFlag
           ? {
-              48: 'images/images.png'
+              128: 'images/yellow.png'
             }
           : {
-              48: 'images/idle.png'
+              128: 'images/red.png'
             },
         tabId: sender.tab.id
       });
