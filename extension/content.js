@@ -62,8 +62,8 @@ function chatListener(streamerName) {
             // IGNORING MESSAGES WITHOUT TEXT
             if (
               liElement.querySelector(
-                '.text_chat_user_message_content'
-              ).textContent != null
+                '.text_chat_user_message_content > span'
+              )
             ) {
               const chatMessage = liElement.querySelector(
                 '.text_chat_user_message_content'
@@ -88,6 +88,44 @@ function chatListener(streamerName) {
                   chatMessage
               );
 
+              socket.emit('messagesToRoom', channelID, {
+                chatMessage,
+                chatUsername,
+                streamerName,
+                channelID
+              });
+            } else if (
+              liElement.querySelector('.goodie_icon_container')
+            ) {
+              // TODO HANDEL NULL VALUE
+              const chatUsername = liElement.querySelector(
+                '.text_chat_sender_name'
+              ).textContent;
+
+              // Use the match() function to apply the regex pattern
+              const regex = /\/goodie\/(\w+).svg/;
+
+              const special = liElement
+                .querySelector('.goodie_icon')
+                .querySelector('img')
+                .getAttribute('src')
+                .match(regex)[1];
+
+              // GETTING CHATTER IMAGE
+              // const chatImage = liElement
+              //   .querySelector('picture > source')
+              //   .getAttribute('srcset');
+
+              socket.emit('specialsToRoom', channelID, {
+                chatUsername,
+                streamerName,
+                special
+              });
+
+              console.log('here comes the special');
+              console.log(special);
+
+              // AJAX HANDLER ON MESSAGE
               // if (chatMessage == 'vibrate') {
               //   console.log('vibrate');
               //   fetch(`http://localhost:3000/message`, {
@@ -97,31 +135,6 @@ function chatListener(streamerName) {
               //     })
               //   });
               // }
-
-              // AJAX HANDLER ON MESSAGE
-
-              // EMITTING MESSAGE TO WEBSOCKETSERVER
-              // socket.emit('message', {
-              //  chatMessage, chatUsername, streamerName, channelID;
-              // });
-
-              // EMITTING MESSAGE TO ROOM IN WEBSOCKETSERVER
-
-              socket.emit('messagesToRoom', channelID, {
-                chatMessage,
-                chatUsername,
-                streamerName,
-                channelID
-              });
-
-              // EMITTING MESSAGE TO POPUPHTML
-              // chrome.runtime.sendMessage({
-              //   newMessage: {
-              //     chatMessage,
-              //     chatUsername,
-              //     streamerName
-              //   }
-              // });
             }
           }
         }

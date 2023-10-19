@@ -10,14 +10,15 @@ dotenv.config();
 const PORT = 3100 || process.env.PORT;
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(morgan('tiny'));
 const server = createServer(app);
 
 let currentRooms = {};
 
 const io = new Server(server, {
-  //   path: '/ws/', <---- MUST MATCH THE NGINX CONFIG PATH
+  path: '/V1/hackerthon/',
+  transports: ['polling'], //LISTENING ON ROUTE /ws DOESNT WORK?????
   cors: {
     origin: '*', // Allow all origins or replace "*" with your specific origin
     methods: ['GET', 'POST']
@@ -25,13 +26,13 @@ const io = new Server(server, {
 });
 
 app.get('/', (req, res) => {
-  res.send(
-    '<h1>Welcome to the Joyclub Livestream Listener</h1><p>You find the ws connection on /ws</p>'
-  );
+  res.send('<h1>Welcome to the Joyclub Livestream Listener</h1>');
 });
 
 // UPDATING AND EMITTING THE CURRENT AVAILABLE ROOMS
 io.on('connection', (socket) => {
+  console.log('incoming connection');
+  console.log(socket);
   io.emit('currentRooms', currentRooms);
   console.log('a user connected');
 
@@ -71,11 +72,39 @@ io.on('connection', (socket) => {
     io.emit('currentRooms', currentRooms);
   });
 
+  // RECIEVING SPECIALS FROM ROOM AND EMITING THEM
+  socket.on('specialsToRoom', (room, messages) => {
+    const { special, chatUsername, streamerName, channelID } =
+      messages;
+    const emitterUser = socket.id;
+    // CONTROL LOGGING IF LIMIT TO ROOMS WORKS - SHOWING ALL ROOM CONNECTIONS
+    for (const room in currentRooms) {
+      const usersInRoom = io.sockets.adapter.rooms.get(room)?.size;
+      console.log('room: ' + room + 'users: ' + usersInRoom);
+    }
+    // TO AVOID MULTIPLE MESSAGES FROM THE SAME CHANNEL
+    if (currentRooms[room]?.socketID === emitterUser) {
+      // console.log('.....emitting message...to client');
+      // io.emit('allMessages', {
+      //   special,
+      //   chatUsername,
+      //   streamerName,
+      //   channelID
+      // });
+      io.emit('allSpecials', {
+        special,
+        chatUsername,
+        streamerName,
+        channelID
+      });
+    }
+    return;
+  });
+
   // RECIEVING MESSAGES FROM ROOM AND EMITING THEM
   socket.on('messagesToRoom', (room, messages) => {
     const { chatMessage, chatUsername, streamerName, channelID } =
       messages;
-    console.log(chatMessage);
     const emitterUser = socket.id;
     // CONTROL LOGGING IF LIMIT TO ROOMS WORKS - SHOWING ALL ROOM CONNECTIONS
     for (const room in currentRooms) {
@@ -94,6 +123,7 @@ io.on('connection', (socket) => {
     }
     return;
   });
+
   // REMOVING ROOM IF NO EXTENSION IS LISTENING
   socket.on('disconnect', () => {
     for (const room in currentRooms) {

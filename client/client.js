@@ -28,15 +28,34 @@ function startConnection() {
   });
 
   // LISTENING ALL CHATMESSAGES
-  socket.on('allMessages', (msg) => {
-    const { chatMessage, chatUsername, streamerName, channelID } =
-      msg;
+  // socket.on('allMessages', (msg) => {
+  //   const { chatMessage, chatUsername, streamerName, channelID } =
+  //     msg;
+  //   console.log(msg);
+  //   const $Li = document.createElement('li');
+  //   const $P = document.createElement('p');
+  //   const $Span = document.createElement('span');
+  //   const $firstChild = messageBox.firstChild;
+  //   $Span.textContent = chatUsername;
+  //   $P.textContent = chatMessage;
+  //   streamer.textContent = streamerName;
+  //   $Li.appendChild($Span);
+  //   $Li.appendChild($P);
+  //   messageBox.insertBefore($Li, $firstChild);
+  //   //messageBox.appendChild($Li);
+  // });
+
+  //specialsToRoom;
+
+  // LISTENING ALL SPECIALS
+  socket.on('allSpecials', (msg) => {
+    const { special, chatUsername, streamerName, channelID } = msg;
     console.log(msg);
     const $Li = document.createElement('li');
     const $P = document.createElement('p');
     const $Span = document.createElement('span');
     const $firstChild = messageBox.firstChild;
-    $Span.textContent = chatUsername;
+    $Span.textContent = special;
     $P.textContent = chatMessage;
     streamer.textContent = streamerName;
     $Li.appendChild($Span);
