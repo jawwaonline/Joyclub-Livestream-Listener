@@ -27,26 +27,6 @@ function startConnection() {
     connectionStateElement.textContent = connectionState;
   });
 
-  // LISTENING ALL CHATMESSAGES
-  // socket.on('allMessages', (msg) => {
-  //   const { chatMessage, chatUsername, streamerName, channelID } =
-  //     msg;
-  //   console.log(msg);
-  //   const $Li = document.createElement('li');
-  //   const $P = document.createElement('p');
-  //   const $Span = document.createElement('span');
-  //   const $firstChild = messageBox.firstChild;
-  //   $Span.textContent = chatUsername;
-  //   $P.textContent = chatMessage;
-  //   streamer.textContent = streamerName;
-  //   $Li.appendChild($Span);
-  //   $Li.appendChild($P);
-  //   messageBox.insertBefore($Li, $firstChild);
-  //   //messageBox.appendChild($Li);
-  // });
-
-  //specialsToRoom;
-
   // LISTENING ALL SPECIALS
   socket.on('allSpecials', (msg) => {
     const { special, chatUsername, streamerName, channelID } = msg;
@@ -56,13 +36,29 @@ function startConnection() {
     const $Span = document.createElement('span');
     const $firstChild = messageBox.firstChild;
     $Span.textContent = special;
-    $P.textContent = chatMessage;
+    $P.textContent = chatUsername;
     streamer.textContent = streamerName;
-    $Li.appendChild($Span);
     $Li.appendChild($P);
+    $Li.appendChild($Span);
     messageBox.insertBefore($Li, $firstChild);
-    //messageBox.appendChild($Li);
   });
+
+  // LISTENING ALL CHATMESSAGES
+  // socket.on('allMessages', (msg) => {
+  //   const { chatMessage, chatUsername, streamerName, channelID } =
+  //     msg;
+  //   console.log(msg);
+  //   const $Li = document.createElement('li');
+  //   const $P = document.createElement('p');
+  //   const $Span = document.createElement('span');
+  //   const $firstChild = messageBox.firstChild;
+  //   $P.textContent = chatMessage;
+  //   streamer.textContent = streamerName;
+  //   $Li.appendChild($Span);
+  //   $Li.appendChild($P);
+  //   messageBox.insertBefore($Li, $firstChild);
+  //   messageBox.appendChild($Li);
+  // });
 
   socket.on('currentRooms', (currentRooms) => {
     console.log('a current Room Message came');

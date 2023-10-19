@@ -10,12 +10,11 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "128": "/images/yellow.png"
     }
   },
-  "options_page": "options.html",
+
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [
     {
