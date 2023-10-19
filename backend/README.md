@@ -20,6 +20,9 @@
 - npm i
 - npm run dev or node app.js
 
+- backend emits on "allMessages" "allSpecials" "currentRooms"
+- recieves emits from extension from "specialsToRoom" "messagesToRoom"
+
 ## HOW TO CONFIG YOUR NGINX
 
 location /ws/ {

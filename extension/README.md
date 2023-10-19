@@ -34,15 +34,15 @@
 
 ### TODO
 
-- handling / recieving streamername from content.js
-- state changes on popup.html of connection
+- handling / recieving streamername from content.js ✅
+- state changes icon on connection ✅
 
 ## background.js
 
 ### TODO
 
 - recieve messages from content.js to change icon ✅
-- creating other icons
+- creating other icons ✅
 
 # Installation
 
