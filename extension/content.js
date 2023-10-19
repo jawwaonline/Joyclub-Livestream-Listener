@@ -8,7 +8,10 @@ function chatListener(streamerName) {
 
   // START SOCKET CONNECTION
   //--------------------------------
-  const socket = io('http://localhost:3000');
+  const socket = io('http://api.detailblick.com/', {
+    path: '/V1/hackerthon/',
+    secure: false
+  });
   // script.onload = () => {
   //   const socket = io('http://localhost:3000');
   // };
@@ -17,6 +20,9 @@ function chatListener(streamerName) {
     console.log('Conneted to Websocket Server');
   });
 
+  socket.on('currentRooms', (rooms) => {
+    console.log(rooms + 'response from server detailblick');
+  });
   socket.emit('join room', channelID, streamerName);
   // END SOCKET CONNECTION
   //--------------------------------
@@ -67,6 +73,12 @@ function chatListener(streamerName) {
                 '.text_chat_sender_name'
               ).textContent;
 
+              // GETTING CHATTER IMAGE
+              const chatImage = liElement
+                .querySelector('picture > source')
+                .getAttribute('srcset');
+              console.log(chatImage);
+
               // DEBUGGER
               console.log(
                 streamerName +
@@ -75,6 +87,19 @@ function chatListener(streamerName) {
                   '---' +
                   chatMessage
               );
+
+              // if (chatMessage == 'vibrate') {
+              //   console.log('vibrate');
+              //   fetch(`http://localhost:3000/message`, {
+              //     method: 'POST',
+              //     body: JSON.stringify({
+              //       chatMessage
+              //     })
+              //   });
+              // }
+
+              // AJAX HANDLER ON MESSAGE
+
               // EMITTING MESSAGE TO WEBSOCKETSERVER
               // socket.emit('message', {
               //  chatMessage, chatUsername, streamerName, channelID;
@@ -90,13 +115,13 @@ function chatListener(streamerName) {
               });
 
               // EMITTING MESSAGE TO POPUPHTML
-              chrome.runtime.sendMessage({
-                newMessage: {
-                  chatMessage,
-                  chatUsername,
-                  streamerName
-                }
-              });
+              // chrome.runtime.sendMessage({
+              //   newMessage: {
+              //     chatMessage,
+              //     chatUsername,
+              //     streamerName
+              //   }
+              // });
             }
           }
         }

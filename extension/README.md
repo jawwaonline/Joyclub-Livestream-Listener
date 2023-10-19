@@ -50,3 +50,5 @@
 - click on extension
 - load custom extension
 - load directory extension
+
+# THE PATH OF THE CONTENT.JS MUST MATCH THE NGINX location path !!!

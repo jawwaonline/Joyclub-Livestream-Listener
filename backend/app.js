@@ -7,7 +7,7 @@ import cors from 'cors';
 
 dotenv.config();
 
-const PORT = 3000 || process.env.PORT;
+const PORT = 3100 || process.env.PORT;
 
 const app = express();
 app.use(cors());
@@ -17,7 +17,7 @@ const server = createServer(app);
 let currentRooms = {};
 
 const io = new Server(server, {
-  //   path: '/ws', //LISTENING ON ROUTE /ws DOESNT WORK?????
+  //   path: '/ws/', <---- MUST MATCH THE NGINX CONFIG PATH
   cors: {
     origin: '*', // Allow all origins or replace "*" with your specific origin
     methods: ['GET', 'POST']
@@ -75,6 +75,7 @@ io.on('connection', (socket) => {
   socket.on('messagesToRoom', (room, messages) => {
     const { chatMessage, chatUsername, streamerName, channelID } =
       messages;
+    console.log(chatMessage);
     const emitterUser = socket.id;
     // CONTROL LOGGING IF LIMIT TO ROOMS WORKS - SHOWING ALL ROOM CONNECTIONS
     for (const room in currentRooms) {

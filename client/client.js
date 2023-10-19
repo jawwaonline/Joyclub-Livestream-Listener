@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 function startConnection() {
   let connectionState = false;
 
-  const socket = io('http://127.0.0.1:3000'); // Make sure to replace this with your server URL
+  const socket = io('https://api.detailblick.com/', {
+    path: '/V1/hackerthon/',
+    secure: false
+  }); // Make sure to replace this with your server URL
   const messageBox = document.getElementById('messages');
   const streamer = document.getElementById('streamer');
   const connectionStateElement = document.getElementById(
@@ -32,17 +35,20 @@ function startConnection() {
     const $Li = document.createElement('li');
     const $P = document.createElement('p');
     const $Span = document.createElement('span');
+    const $firstChild = messageBox.firstChild;
     $Span.textContent = chatUsername;
     $P.textContent = chatMessage;
     streamer.textContent = streamerName;
     $Li.appendChild($Span);
     $Li.appendChild($P);
-    messageBox.appendChild($Li);
+    messageBox.insertBefore($Li, $firstChild);
+    //messageBox.appendChild($Li);
   });
 
   socket.on('currentRooms', (currentRooms) => {
+    console.log('a current Room Message came');
     currentRoomsList.textContent = '';
-    if (!currentRooms.keys) {
+    if (Object.keys(currentRooms).length === 0) {
       const $Li = document.createElement('li');
       $Li.textContent = 'no current streams available';
       currentRoomsList.appendChild($Li);
@@ -50,12 +56,14 @@ function startConnection() {
     }
 
     for (let room in currentRooms) {
-      const { streamerName } = currentRooms[room];
-      console.log(streamerName);
+      const { streamerName, channelID } = currentRooms[room];
+      console.log(streamerName + '-------' + room);
       const $Li = document.createElement('li');
       $Li.textContent = room + ' - ' + streamerName;
       currentRoomsList.appendChild($Li);
+      console.log(
+        'here should come the current rooms' + streamerName
+      );
     }
-    console.log(currentRooms);
   });
 }
