@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
   socket.on('leave room', (room) => {
     socket.leave(room);
     delete currentRooms[room];
-    console.log(`User left room: ${room}`);
+
     // SENDING ALL ROOMS TO CLIENTS
     io.emit('currentRooms', currentRooms);
   });
@@ -80,17 +80,9 @@ io.on('connection', (socket) => {
     // CONTROL LOGGING IF LIMIT TO ROOMS WORKS - SHOWING ALL ROOM CONNECTIONS
     for (const room in currentRooms) {
       const usersInRoom = io.sockets.adapter.rooms.get(room)?.size;
-      console.log('room: ' + room + 'users: ' + usersInRoom);
     }
     // TO AVOID MULTIPLE MESSAGES FROM THE SAME CHANNEL
     if (currentRooms[room]?.socketID === emitterUser) {
-      // console.log('.....emitting message...to client');
-      // io.emit('allMessages', {
-      //   special,
-      //   chatUsername,
-      //   streamerName,
-      //   channelID
-      // });
       io.emit('allSpecials', {
         special,
         chatUsername,
@@ -103,20 +95,24 @@ io.on('connection', (socket) => {
 
   // RECIEVING MESSAGES FROM ROOM AND EMITING THEM
   socket.on('messagesToRoom', (room, messages) => {
-    const { chatMessage, chatUsername, streamerName, channelID } =
-      messages;
+    const {
+      chatMessage,
+      chatUsername,
+      streamerName,
+      channelID,
+      chatUserImage
+    } = messages;
     const emitterUser = socket.id;
     // CONTROL LOGGING IF LIMIT TO ROOMS WORKS - SHOWING ALL ROOM CONNECTIONS
     for (const room in currentRooms) {
       const usersInRoom = io.sockets.adapter.rooms.get(room)?.size;
-      console.log('room: ' + room + 'users: ' + usersInRoom);
     }
     // TO AVOID MULTIPLE MESSAGES FROM THE SAME CHANNEL
     if (currentRooms[room]?.socketID === emitterUser) {
-      console.log('.....emitting message...to client');
       io.emit('allMessages', {
         chatMessage,
         chatUsername,
+        chatUserImage,
         streamerName,
         channelID
       });

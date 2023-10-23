@@ -74,10 +74,9 @@ function chatListener(streamerName) {
               ).textContent;
 
               // GETTING CHATTER IMAGE
-              const chatImage = liElement
+              const chatUserImage = liElement
                 .querySelector('picture > source')
                 .getAttribute('srcset');
-              console.log(chatImage);
 
               // DEBUGGER
               console.log(
@@ -92,6 +91,7 @@ function chatListener(streamerName) {
                 chatMessage,
                 chatUsername,
                 streamerName,
+                chatUserImage,
                 channelID
               });
             } else if (
