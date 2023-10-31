@@ -72,36 +72,42 @@ function App() {
     Date.now()
   );
 
-  // useEffect(() => {
-  //   socket.connect();
-  //   socket.on('allMessages', (message) => {
-  //     message.timestampCreated = Date.now();
-  //     setChatMessages((prev) => [message, ...prev]);
-  //     setShowing(true);
-  //     setCurrentTimestamp(Date.now());
-  //   });
-  //   socket.on('currentStreams', (currentstreams) => {
-  //     setStreamChannels(currentstreams);
-  //   });
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
+  useEffect(() => {
+    socket.connect();
+    socket.on('allMessages', (message) => {
+      message.timestampCreated = Date.now();
+      setChatMessages((prev) => [message, ...prev]);
+      setShowing(true);
+      setCurrentTimestamp(Date.now());
+    });
+    socket.on('currentStreams', (currentstreams) => {
+      setStreamChannels(currentstreams);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   // Listen for messages
-  //   socket.on('currentRooms', (msg) => {
-  //     const rooms = [...Object.keys(msg)];
+  useEffect(() => {
+    // Listen for messages
+    socket.on('currentRooms', (msg) => {
+      console.log(msg);
+      const rooms = Object.entries(msg).map(
+        ([channelID, values]) => ({
+          channelID,
+          ...values
+        })
+      );
+      console.log(rooms);
+      setStreamChannels(rooms);
+    });
 
-  //     setStreamChannels(...rooms);
-  //   });
-
-  //   // Cleanup ??
-  //   return () => {
-  //     socket.off('error');
-  //     socket.off('receive message');
-  //   };
-  // }, []);
+    // Cleanup ??
+    return () => {
+      socket.off('error');
+      socket.off('receive message');
+    };
+  }, []);
 
   const handleclick = () => {
     console.log('vlicj');
@@ -122,16 +128,16 @@ function App() {
 
     <div className="md:flex-row flex-col flex w-[800px] relative min-h-[600px] min-w[600px] max-w-[80vw] h-[80vh] overflow-hidden   backdrop-blur-xl rounded-xl border border-[rgba(255,230,244,0.13)] bg-[rgba(255,230,244,0.13)] shadow-2xl ">
       {/* actual streamers wrapper*/}
-      <div className="bg-[rgba(255,255,255,0.5)] md:overflow-y-scroll  flex-shrink-0 overflow-x-scroll  min-w-[200px] md:w-[200px] flex md:flex-col p-4 gap-2">
+      <div className="bg-[rgba(255,255,255,0.5)] md:overflow-y- auto  flex-shrink-0 overflow-x-auto  min-w-[200px] md:w-[200px] flex md:flex-col p-4 gap-2">
         {/* streamer */}
-        {streamChannels.map((channel) => (
+        {streamChannels?.map((channel) => (
           <article
-            key={channel.channelID}
+            key={channel.socketID}
             className="hover:shadow-lg hover:cursor-pointer  ease-in-out transition md:flex-row flex-col flex items-center gap-2 text-pink-800 text-sm rounded-xl p-1 bg-[rgba(255,255,255,0.2)]"
           >
             <img
               className="rounded-full w-10 h-10 "
-              src={channel.streamerImage}
+              src={channel.sreamerImage}
               alt={`image of ${channel.streamerName}`}
             />
             <p>{channel.streamerName}</p>
