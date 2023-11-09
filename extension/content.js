@@ -1,7 +1,7 @@
 console.log('running in content.js');
 
 //----------------------------------------------------------------------------------------
-function chatListener(streamerName) {
+function chatListener(streamerName, streamerImage) {
   const currentUrl = window.location.href;
   const url = new URL(currentUrl);
   const channelID = url.searchParams.get('channel');
@@ -23,7 +23,7 @@ function chatListener(streamerName) {
   socket.on('currentRooms', (rooms) => {
     console.log(rooms + 'response from server detailblick');
   });
-  socket.emit('join room', channelID, streamerName);
+  socket.emit('join room', channelID, streamerName, streamerImage);
   // END SOCKET CONNECTION
   //--------------------------------
 
@@ -160,10 +160,13 @@ setTimeout(() => {
   const Element = document.querySelector(
     '.video_stream_profile .name'
   );
+  const Picture = document
+    .querySelector('source')
+    .getAttribute('srcset');
 
   const streamerName = Element ? Element.textContent : 'Anonymous';
-
-  chatListener(streamerName);
+  const streamerImage = Picture ? Picture : 'images/yellow.png';
+  chatListener(streamerName, streamerImage);
 
   console.log('starting');
 }, 5000);

@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
 
   // WHEN USER JOINS A ROOM, CHECK IF ROOM ALREADY EXIST
   // IF NOT CREATE ONE AND ADD ROOM TO STORE
-  socket.on('join room', (room, streamerName) => {
+  socket.on('join room', (room, streamerName, streamerImage) => {
     // CHECK IF ROOM ALREADY EXISTS AND USERCOUNT IS LESS THAN ONE IN A ROOM
     //console.log(io.sockets.adapter.rooms.get(room)?.size >= 1);
     if (
@@ -50,7 +50,8 @@ io.on('connection', (socket) => {
     currentRooms[room] = {
       userInRoom: true,
       socketID: socket.id,
-      streamerName: streamerName
+      streamerName: streamerName,
+      sreamerImage: streamerImage
     }; // Add the room to the rooms object
     socket.join(room);
     console.log(
